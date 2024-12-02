@@ -1,0 +1,116 @@
+1: Create a Pod Named redis:
+kubectl run redis --image=redis --restart=Never
+kubectl get pods
+2: save the following YAML file as nginx-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx123
+3: Create the Pod: kubectl apply -f nginx-pod.yaml
+4: Check the Status of the nginx Pod:
+  kubectl get pods nginx
+5: Change the nginx Pod Image:
+  Edit the YAML file (nginx-pod.yaml) to use the correct image:   image: nginx
+6: Apply the changes:
+  kubectl apply -f nginx-pod.yaml 
+7: Verify:  kubectl get pods nginx
+6. Check the Number of ReplicaSets: 
+   kubectl get replicasets
+7. Create a ReplicaSet:Save the following YAML as replica-set-1.yaml:
+        apiVersion: apps/v1
+        kind: ReplicaSet
+        metadata:
+          name: replica-set-1
+        spec:
+          replicas: 3
+          selector:
+            matchLabels:
+              app: busybox-app
+          template:
+            metadata:
+              labels:
+                app: busybox-app
+            spec:
+              containers:
+              - name: busybox-container
+                image: busybox
+                command: ["sh", "-c", "sleep 3600"]
+Create the ReplicaSet:
+  kubectl apply -f replica-set-1.yaml
+8. Scale the ReplicaSet: 
+  kubectl scale replicaset replica-set-1 --replicas=5
+  Verify:
+    kubectl get pods
+9. Check Ready Pods: 
+  kubectl get pods
+10. Delete One Pod and Explain Why 5 Pods Remain:
+  kubectl delete pod <pod-name>
+  kubectl get pods
+11. Check Deployments and ReplicaSets:
+  kubectl get deployments
+  kubectl get replicasets
+12. Create a Deployment:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: deployment-1
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app: busybox-deployment
+      template:
+        metadata:
+          labels:
+            app: busybox-deployment
+        spec:
+          containers:
+          - name: busybox-container
+            image: busybox
+            command: ["sh", "-c", "sleep 3600"]
+Create the Deployment:
+  kubectl apply -f deployment-1.yaml
+13. Check Deployments and ReplicaSets: 
+  kubectl get deployments
+  kubectl get replicasets
+14. Check Ready Pods for deployment-1:
+  kubectl get pods
+15. Update deployment-1 Image:
+  kubectl set image deployment deployment-1 busybox-container=nginx
+  kubectl rollout status deployment deployment-1
+16. Check Deployment Strategy:   
+    kubectl describe deployment deployment-1
+17. Rollback deployment-1:
+    kubectl rollout undo deployment deployment-1
+18. Create a Deployment Using nginx:latest: Save the following YAML as nginx-deployment.yaml:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-deployment
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app: nginx-app
+          type: front-end
+      template:
+        metadata:
+          labels:
+            app: nginx-app
+            type: front-end
+        spec:
+          containers:
+          - name: nginx-container
+            image: nginx:latest
+Create the Deployment: kubectl apply -f nginx-deployment.yaml
+
+
+
+
+
+
+
